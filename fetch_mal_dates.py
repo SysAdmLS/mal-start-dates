@@ -18,7 +18,7 @@ class MALDateLookup:
     CLIENT_ID = os.environ.get("MAL_CLIENT_ID")
     LIMIT = 500
     DEFAULT_CACHE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "mal_dates_cache.json")
-    DEFAULT_MAX_AGE = timedelta(hours=48)
+    DEFAULT_MAX_AGE = timedelta(hours=6)
 
     def __init__(self, cache_path=None, max_age=None):
         self._cache_path = cache_path or self.DEFAULT_CACHE_PATH
