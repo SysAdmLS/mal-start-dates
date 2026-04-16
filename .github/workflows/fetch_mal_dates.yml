@@ -37,4 +37,5 @@ jobs:
           git add mal_dates_cache.json
           # Only commit if there are actual changes
           git diff --cached --quiet || git commit -m "chore: update MAL dates cache $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git pull --rebase
           git push
