@@ -1,0 +1,40 @@
+name: Fetch MAL Dates
+
+on:
+  schedule:
+    # Every 12 hours (midnight and noon UTC)
+    - cron: '0 0,12 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run fetch_mal_dates.py
+        env:
+          MAL_CLIENT_ID: ${{ secrets.MAL_CLIENT_ID }}
+        run: python fetch_mal_dates.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add mal_dates_cache.json
+          # Only commit if there are actual changes
+          git diff --cached --quiet || git commit -m "chore: update MAL dates cache $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push
