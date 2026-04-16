@@ -108,8 +108,9 @@ class MALDateLookup:
 
 if __name__ == "__main__":
     lookup = MALDateLookup()
+    lookup.refresh(force=True)
     print(f"\nTotal entries: {lookup.size}")
 
     # Quick demo lookup
-    test_id = 63147  # Cowboy Bebop
+    test_id = 63147
     print(f"MAL {test_id} -> {lookup.lookup(test_id)}")
