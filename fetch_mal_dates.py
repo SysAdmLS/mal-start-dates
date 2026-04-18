@@ -90,12 +90,13 @@ class MALDateLookup:
 
     def _save_cache(self):
         # Store as JSON: {"fetched": iso-timestamp, "entries": {id: date, ...}}
+        sorted_entries = {str(k): self._entries[k] for k in sorted(self._entries)}
         payload = {
             "fetched": datetime.now().isoformat(),
-            "entries": {str(k): v for k, v in self._entries.items()},
+            "entries": sorted_entries,
         }
         with open(self._cache_path, "w", encoding="utf-8") as f:
-            json.dump(payload, f)
+            json.dump(payload, f, indent=2)
         print(f"[MALDateLookup] Cache saved to {self._cache_path}")
 
     def _load_cache(self):

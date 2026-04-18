@@ -34,6 +34,17 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Check if only the 'fetched' timestamp changed
+          if git cat-file -e HEAD:mal_dates_cache.json 2>/dev/null; then
+            OLD_ENTRIES=$(git show HEAD:mal_dates_cache.json | jq -S -c '.entries')
+            NEW_ENTRIES=$(jq -S -c '.entries' mal_dates_cache.json)
+            if [ "$OLD_ENTRIES" = "$NEW_ENTRIES" ]; then
+              echo "No entries changed. Skipping commit."
+              exit 0
+            fi
+          fi
+          
           git add mal_dates_cache.json
           # Only commit if there are actual changes
           git diff --cached --quiet || git commit -m "chore: update MAL dates cache $(date -u +'%Y-%m-%d %H:%M UTC')"
